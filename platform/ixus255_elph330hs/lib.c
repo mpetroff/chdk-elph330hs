@@ -27,9 +27,9 @@ void debug_led(int state)
 {
     volatile long *p=(void*)LED_PR;
     if (state)
-	p[0]=0x46;
+	p[0]=0x93d800;
     else
-	p[0]=0x44;
+	p[0]=0x83dc00;
 }
 
 void camera_set_led(int led, int state, int bright) {
