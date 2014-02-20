@@ -1,0 +1,10 @@
+*.o
+*.bin
+*.elf
+*.a
+*.dump
+*.syms
+bin/**
+CHDK/**
+tools/**
+modules/**
