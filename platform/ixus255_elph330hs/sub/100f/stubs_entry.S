@@ -22,7 +22,7 @@
 // Stubs below should be checked. Stub not matched 100%, or difference found to current 'stubs_entry_2.S'
 //    Name                                     Address      Rule  %  Comp to stubs_entry_2.S
 NHSTUB(DeleteFile_Fut                         ,0xff034ad0) //  1 90%
-// ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0x00000000
+// ERROR: MakeDirectory_Fut is not found.                  //--- ---    *** != 0xff034678
 // ERROR: RefreshPhysicalScreen is not found.              //--- ---    *** != 0x00000000
 
 // Check of modemap from 'platform/CAMERA/shooting.c':
