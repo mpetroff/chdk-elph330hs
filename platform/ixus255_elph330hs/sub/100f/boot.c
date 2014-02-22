@@ -204,8 +204,10 @@ void __attribute__((naked,noinline)) sub_FF00038C_my() {
     //Replacement of sub_ for correct power-on.
     //(short press = playback mode, long press = record mode)
 
-	// value and pointer from sub_FF093A28 
-    if ((*(int*) 0xC0220100) & 1)       // TODO: check this address
+    // sub_FF032004->sub_FF091350: 0xff5b8568+(0x36<<3)=0xff5b8718->0xc022f48c
+    //                             0xff5b8718+0x4->0x00000004
+    // value and pointer from sub_FF093A28 
+    if ((*(int*) 0xc022f48c) & 4)
         *(int*)(0x2fa8+0x4) = 0x200000; // Playmode 
     else
         *(int*)(0x2fa8+0x4) = 0x100000; // Shootingmode
