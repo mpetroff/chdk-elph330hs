@@ -46,12 +46,11 @@ FUNC ref=0 length=27
     //Replacement of sub_ for correct power-on.
     //(short press = playback mode, long press = record mode)
 
-	// look at power-on switch sub_FF031094
-	// value and pointer from sub_FF090140 
-    if ((*(int*) 0xC0220100) & 1)       
-        *(int*)(0x2F30) = 0x200000; // Playmode 
+	// value and pointer from sub_FF093A28 
+    if ((*(int*) 0xC0220100) & 1)       // TODO: check this address
+        *(int*)(0x2fa8+0x4) = 0x200000; // Playmode 
     else
-        *(int*)(0x2f30) = 0x100000; // Shootingmode
+        *(int*)(0x2fa8+0x4) = 0x100000; // Shootingmode
 
 <<<
 ASM
