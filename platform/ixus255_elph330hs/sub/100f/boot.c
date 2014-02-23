@@ -208,9 +208,9 @@ void __attribute__((naked,noinline)) sub_FF00038C_my() {
     //                             0xff5b8718+0x4->0x00000004
     // value and pointer from sub_FF093A28 
     if ((*(int*) 0xc022f48c) & 4)
-        *(int*)(0x2fa8+0x4) = 0x200000; // Playmode 
+        *(int*)(0x2fa8) = 0x200000; // Playmode 
     else
-        *(int*)(0x2fa8+0x4) = 0x100000; // Shootingmode
+        *(int*)(0x2fa8) = 0x100000; // Shootingmode
 
 asm volatile (
 "    LDR     R0, =0xFF000404 \n"
