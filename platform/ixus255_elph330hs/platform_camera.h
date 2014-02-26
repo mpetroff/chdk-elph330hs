@@ -91,15 +91,15 @@
     #undef  CAM_USES_ASPECT_CORRECTION
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
-    #define CAM_BITMAP_WIDTH                720 // Actual width of bitmap screen in bytes
+    #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
 
-    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
+//    #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
 
 
     #undef  CAM_BITMAP_PALETTE
     #define CAM_BITMAP_PALETTE                  13
 
-    #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
+//    #define CAM_LOAD_CUSTOM_COLORS              1   // Enable loading CHDK colors into the camera palette memory/hardware
     // doesn't seem to conflict badly with anything
     #define CHDK_COLOR_BASE                     0x73 // Start color index for CHDK colors loaded into camera palette.
 
@@ -140,7 +140,7 @@
     #define  CAM_FILEWRITETASK_SEEKS           1 // Camera's FileWriteTask can do Lseek() - DryOS r50 or higher, the define could also be CAM_DRYOS_2_3_R50
 
 //	only non-AF led available
-	#define REMOTE_SYNC_STATUS_LED 	0xC0220094		// specifies an LED that turns on while camera waits for USB remote to sync
+	#define REMOTE_SYNC_STATUS_LED 	0xC022C020		// specifies an LED that turns on while camera waits for USB remote to sync
 
     #undef CAM_AF_LED
     #define CAM_AF_LED                         1

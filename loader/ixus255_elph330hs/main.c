@@ -54,9 +54,9 @@ void __attribute__((noreturn)) my_restart()
 	"LDR     R0, =0x12345678\n"  // marker value stored in TCM
 	"MOV     R1, #0x80000000\n"
 	"STR     R0, [R1,#0xFFC]\n"
-//	"LDR     R0, =loc_FF000000\n"
-	"mov     R0, %0\n"
-//	"LDMFD   SP!, {R4,LR}\n"
+	"LDMFD   SP!, {R4,LR}\n"
+//	"MOV     R0, =loc_FF000000\n"
+	"MOV     R0, %0\n"
 	"BX      R0\n"
 	: : "r"(MEMISOSTART) : "memory","r0","r1","r2","r3","r4");
 
