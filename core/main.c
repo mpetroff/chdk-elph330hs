@@ -203,11 +203,11 @@ void core_spytask()
         // Change ALT mode if the KBD task has flagged a state change
         gui_activate_alt_mode();
 
-/*#ifdef  CAM_LOAD_CUSTOM_COLORS
+#ifdef  CAM_LOAD_CUSTOM_COLORS
         // Color palette function
         extern void load_chdk_palette();
         load_chdk_palette();
-#endif*/
+#endif
 
         if (raw_data_available)
         {
