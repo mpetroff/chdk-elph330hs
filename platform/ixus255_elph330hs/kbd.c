@@ -18,9 +18,9 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 static KeyMap keymap[];
 
 // no keys in 0 or 1
-#define KEYS_MASK0 (0x00000000)
-#define KEYS_MASK1 (0x00000000)
-#define KEYS_MASK2 (0x77FE)
+#define KEYS_MASK0 (0xce3)
+#define KEYS_MASK1 (0xf00000)
+#define KEYS_MASK2 (0x5000)
 
 #define SD_READONLY_FLAG    0x02000000 // Found @0xff5b8984, levent 0x20a
 #define SD_READONLY_IDX     1
@@ -29,7 +29,9 @@ static KeyMap keymap[];
 #define BATTCOVER_FLAG      0x04000000 // Found @0xff5b89b4, levent 0x205
 #define BATTCOVER_IDX       2
 
-extern void usb_remote_key( void ) ;
+extern void usb_remote_key(void);
+extern void _GetKbdState(long*);
+
 int get_usb_bit() 
 {
 	long usb_physw[3];
@@ -70,14 +72,13 @@ mykbd_task()
 
 long __attribute__((naked,noinline)) wrap_kbd_p1_f()
 {
-
     asm volatile(
-                "STMFD   SP!, {R1-R7,LR}\n"
-                "MOV     R5, #0\n"
-                "BL      my_kbd_read_keys\n"
-               	"B	 _kbd_p1_f_cont\n"
+                "STMFD   SP!, {R1-R7,LR} \n"
+                "MOV     R5, #0 \n"
+                "BL      my_kbd_read_keys \n"
+               	"B	     _kbd_p1_f_cont \n"
     );
-    return 0; // shut up the compiler
+    return 0;
 }
 
 
@@ -87,9 +88,8 @@ void my_kbd_read_keys()
     kbd_prev_state[1] = kbd_new_state[1];
     kbd_prev_state[2] = kbd_new_state[2];
 
-    //_kbd_pwr_on();
-
-    kbd_fetch_data(kbd_new_state);
+    _GetKbdState(kbd_new_state);
+    _kbd_read_keys_r2(kbd_new_state);
 
     if (kbd_process() == 0){
         // leave it alone...
@@ -107,18 +107,14 @@ void my_kbd_read_keys()
         physw_status[2] = (kbd_new_state[2] & (~KEYS_MASK2)) |
         (kbd_mod_state[2] & KEYS_MASK2);
     }
-    _kbd_read_keys_r2(physw_status);
 
 
 	usb_remote_key() ;
 
-	if (conf.remote_enable) {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~(SD_READONLY_FLAG | USB_MASK);
-	} else {
-		physw_status[USB_IDX] = physw_status[USB_IDX] & ~SD_READONLY_FLAG;
-	}
-	
-    //_kbd_pwr_off();
+    physw_status[SD_READONLY_IDX] = physw_status[SD_READONLY_IDX] & ~SD_READONLY_FLAG;
+    if (conf.remote_enable) {
+		physw_status[USB_IDX] = physw_status[USB_IDX] & ~USB_MASK;
+    }
 }
 
 void kbd_key_press(long key)
@@ -236,32 +232,26 @@ long kbd_use_zoom_as_mf() {
 }
 #endif
 
-// from sig finder
+// Found in RAM
 static KeyMap keymap[] = {
-    { 0, KEY_DISPLAY         ,0x00000002 }, // Found @0xff5b8924, levent 0x0a
-    { 0, KEY_ZOOM_IN         ,0x00000020 }, // Found @0xff5b8934, levent 0x02
-    { 0, KEY_LEFT            ,0x00000040 }, // Found @0xff5b893c, levent 0x06
-    { 0, KEY_MENU            ,0x00000080 }, // Found @0xff5b8944, levent 0x09
-    { 0, KEY_SET             ,0x00000400 }, // Found @0xff5b894c, levent 0x08
-    { 0, KEY_RIGHT           ,0x00000800 }, // Found @0xff5b8954, levent 0x07
-    { 1, KEY_SHOOT_FULL      ,0x00300000 }, // Found @0xff5b8964, levent 0x01
-    { 1, KEY_SHOOT_FULL_ONLY ,0x00200000 }, // Found @0xff5b8964, levent 0x01
-    { 1, KEY_SHOOT_HALF      ,0x00100000 }, // Found @0xff5b895c, levent 0x00
-    { 1, KEY_POWER           ,0x00400000 }, // Found @0xff5b896c, levent 0x100
-    { 1, KEY_PLAYBACK        ,0x00800000 }, // Found @0xff5b8974, levent 0x101
-    { 2, KEY_ZOOM_OUT        ,0x00001000 }, // Found @0xff5b898c, levent 0x03
-    { 2, KEY_UP              ,0x00004000 }, // Found @0xff5b8994, levent 0x04
+    { 0, KEY_UP              , 0x00000040 },
+    { 0, KEY_EXPO_CORR       , 0x00000040 },
+    { 0, KEY_DOWN            , 0x00000800 },
+    { 0, KEY_DISPLAY         , 0x00000800 },
+    { 0, KEY_LEFT            , 0x00000400 },
+    { 0, KEY_MACRO           , 0x00000400 },
+    { 0, KEY_RIGHT           , 0x00000080 },
+    { 0, KEY_FLASH           , 0x00000080 },
+    { 0, KEY_MENU            , 0x00000001 },
+    { 0, KEY_SET             , 0x00000002 },
+    { 0, KEY_VIDEO           , 0x00000020 },
+    { 1, KEY_SHOOT_FULL      , 0x00300000 },
+    { 1, KEY_SHOOT_FULL_ONLY , 0x00200000 },
+    { 1, KEY_SHOOT_HALF      , 0x00100000 },
+    { 1, KEY_POWER           , 0x00400000 },
+    { 1, KEY_PLAYBACK        , 0x00800000 },
+    { 2, KEY_ZOOM_IN         , 0x00001000 },
+    { 2, KEY_ZOOM_OUT        , 0x00004000 },
     { 0, 0, 0 }
 };
-
-void kbd_fetch_data(long *dst)
-{
-	// FF0907A0 GetKbdState
-    volatile long *mmio0 = (void*)0xc0220200;
-    volatile long *mmio1 = (void*)0xc0220204;
-    volatile long *mmio2 = (void*)0xc0220208;
-
-    dst[0] = *mmio0;
-    dst[1] = *mmio1;
-    dst[2] = *mmio2 & 0xffff;
-}
+// Note: auto/manual switch is 0x00000010 in word index 0
