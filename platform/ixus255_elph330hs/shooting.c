@@ -82,14 +82,15 @@ const ShutterSpeed shutter_speeds_table[] = {
 };
 
 const ISOTable iso_table[] = {
-//    { -1,     1,    "HI", -1},
     {  0,     0,  "Auto", -1},
-    {  1,    80,    "80", -1}, // note, camera does not support 89
+    {  1,    80,    "80", -1},
     {  2,   100,   "100", -1},
     {  3,   200,   "200", -1},
     {  4,   400,   "400", -1},
     {  5,   800,   "800", -1},
     {  6,  1600,  "1600", -1},
+    {  7,  3200,  "3200", -1},
+    {  8,  6400,  "6400", -1},
 };          
 
 /*
@@ -152,7 +153,7 @@ long get_target_file_num() {
     return get_exposure_counter();
 }
 #if defined(CAM_DATE_FOLDER_NAMING)
-// ELPH130 camera uses date to name directory
+// ELPH330 camera uses date to name directory
 // TODO currently returns something like A/DCIM/101___09/ETC_0112.TMP
 // may need different params
 void get_target_dir_name(char *out)
