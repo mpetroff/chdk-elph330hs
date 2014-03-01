@@ -1,6 +1,3 @@
-// TODO this holds and exposure count of some kind, but it only updates when rebooting or switching to play!
-#define PARAM_FILE_COUNTER      0x1
-
 #include "platform.h"
 
 // These F-numbers are the "mock" values shown by the cam.
@@ -161,6 +158,5 @@ long get_target_dir_num()
 }
 #endif
 
-// TODO
-int circle_of_confusion = 6;
+int circle_of_confusion = 5;
 
