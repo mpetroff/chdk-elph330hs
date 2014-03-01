@@ -28,14 +28,9 @@ NHSTUB(DeleteFile_Fut                         ,0xff034ad0) //  1 90%
 // Check of modemap from 'platform/CAMERA/shooting.c':
 // Firmware modemap table found @ff3e9438 -> ff840a60
 // Mode 33339 in firmware but not in current modemap
-// Mode 33331 in firmware but not in current modemap
-// Mode 33334 in firmware but not in current modemap
-// Mode 33300 in firmware but not in current modemap
-// Mode 32784 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
-// Mode 32776 in firmware but not in current modemap
-// Mode  2633 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_LOWLIGHT            32807
+// Current modemap entry not found in firmware - MODE_VIDEO_MINIATURE     34354
+// Current modemap entry not found in firmware - MODE_VIDEO_STD           33796
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0003f484) // Found @0xff032320

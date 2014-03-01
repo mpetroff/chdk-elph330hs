@@ -93,20 +93,24 @@ const ISOTable iso_table[] = {
 };          
 
 /*
-http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_elph_130_is#Specifications
+http://www.usa.canon.com/cusa/consumer/products/cameras/digital_cameras/powershot_elph_330_hs#Specifications
 
 Shooting Modes
-	Auto, P, Portrait, Smart shutter (Smile, Wink self timer, Face Self timer),
-    Low light, Fisheye Effect, Miniature Effect, Toy Camera Effect, Monochrome,
-    Super Vivid, Poster Effect, Color Accent, Color Swap, Snow, Fireworks, 
-    Long Shutter, Stitch assist
-	Movie
-		1280 x 720 (25 fps), 640 x 480 (30 fps) 
-        
-
-canon mode list FF61C088 in 100a
-
-NOTE elph130 does not have "scene" modes, but the distinction is meaningless for chdk
+    Auto, Hybrid Auto, P, Portrait, Smooth Skin, Smart Shutter (Smile, Wink
+    Self-timer, Face Self-timer), High-Speed Burst, Handheld Night Scene,
+    Fisheye Effect, Miniature Effect, Toy Camera Effect, Soft Focus,
+    Monochrome, Super Vivid, Poster Effect, Color Accent, Color Swap, Snow,
+    Fireworks, Long Shutter, Stitch Assist, Super Slow Motion Movie
+	
+Video Modes
+    Full HD 1920 x 1080: 24 fps (23.976)
+    HD 1280 x 720: 30 fps (29.97)
+    Digest Movie HD 1280 x 720: 30 fps (29.97)
+    Miniature Effect HD 1280 x 720: 6 fps / 3 fps / 1.5 fps
+    Miniature Effect 640 x 480: 6 fps / 3 fps / 1.5 fps
+    Super Slow Motion Movie 640 x 480: 120 fps
+    Super Slow Motion Movie 320 x 240: 240 fps
+    640 x 480: 30 fps (29.97)
 */
 const CapturemodeMap modemap[] = {
     { MODE_LONG_SHUTTER,        32774 },
@@ -115,7 +119,6 @@ const CapturemodeMap modemap[] = {
     { MODE_MINIATURE,           33330 },
     { MODE_FISHEYE,             33329 },
     { MODE_SCN_TOY_CAMERA,      33333 }, // not really a SCN mode
-    { MODE_LOWLIGHT,            32807 },
     { MODE_COLOR_ACCENT,        33315 },
     { MODE_COLOR_SWAP,          33316 },
     { MODE_SCN_MONOCHROME,      33336 },
@@ -128,7 +131,15 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_FACE_SELF_TIMER, 33326 },
     { MODE_SMART_SHUTTER,       33327 },
     { MODE_SCN_WINK_SELF_TIMER, 33328 },
-// TODO video
+    { MODE_SCN_SMOOTH_SKIN,     33300 },
+    { MODE_HIGHSPEED_BURST,     32776 },
+    { MODE_SCN_SOFTFOCUS,       33334 },
+    { MODE_VIDEO_SUPER_SLOW,     2633 }, // 3657 when recording
+    { MODE_NIGHT_SCENE,         33331 },
+    { MODE_VIDEO_STD,           33796 }, // 33808 when in Hybrid Auto
+    { MODE_VIDEO_MINIATURE,     34354 },
+    { MODE_VIDEO_MOVIE_DIGEST,  32784 }
+// stubs_entry.S says there are two more modes, but I can't find them
 };
 
 #include "../generic/shooting.c"

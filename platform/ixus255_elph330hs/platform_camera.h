@@ -144,7 +144,8 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                         1
 
-    #define  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN  1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #define CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN  1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
+    #define CAM_DISABLE_RAW_IN_HQ_BURST         // For cameras with 'HQ Burst' mode that does not work with raw define this
 
 
 //----------------------------------------------------------
