@@ -126,8 +126,9 @@ const CapturemodeMap modemap[] = {
     { MODE_SCN_SOFTFOCUS,       33334 },
     { MODE_VIDEO_SUPER_SLOW,     2633 }, // 3657 when recording
     { MODE_NIGHT_SCENE,         33331 },
-    { MODE_VIDEO_STD,           33796 }, // 33808 when in Hybrid Auto
-    { MODE_VIDEO_MINIATURE,     34354 },
+// Not in mode selection
+//    { MODE_VIDEO_STD,           33796 }, // when recording; 33808 when recording in Hybrid Auto
+//    { MODE_VIDEO_MINIATURE,     34354 }, // when recording in miniature mode
     { MODE_VIDEO_MOVIE_DIGEST,  32784 }
 // stubs_entry.S says there are two more modes, but I can't find them
 };

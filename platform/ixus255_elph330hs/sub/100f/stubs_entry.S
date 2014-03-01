@@ -29,8 +29,6 @@ NHSTUB(DeleteFile_Fut                         ,0xff034ad0) //  1 90%
 // Firmware modemap table found @ff3e9438 -> ff840a60
 // Mode 33339 in firmware but not in current modemap
 // Mode 33295 in firmware but not in current modemap
-// Current modemap entry not found in firmware - MODE_VIDEO_MINIATURE     34354
-// Current modemap entry not found in firmware - MODE_VIDEO_STD           33796
 
 // Values below can be overridden in 'stubs_min.S':
 DEF(physw_status                            ,0x0003f484) // Found @0xff032320
