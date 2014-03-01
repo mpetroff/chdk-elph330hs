@@ -4,28 +4,17 @@
 #include "platform.h"
 
 // These F-numbers are the "mock" values shown by the cam.
-// They're linked to FL (zoom) and ND filter.
-// aperture_sizes_table[].id is just a serial number.
-// note av96 varies continously with zoom, the following values are just representative
+// They're linked to FL (zoom) (surpisingly not ND filter as well).
 const ApertureSize aperture_sizes_table[] = { // PROPCASE 23
-    {  9, 328, "3.2" },
-    { 10, 331, "3.5" }, 
-    { 11, 379, "4.0" }, 
-    { 12, 425, "4.5" },
-    { 13, 463, "5.0" },
-    { 14, 474, "5.6" },
-    { 15, 502, "6.3" },
-    { 16, 541, "6.9" },
-
-// The rest are the same physical apertures as above, but with ND:
-    { 17, 604, "9.0" },
-    { 18, 613, "10.0" },
-    { 19, 657, "11.0" },
-    { 20, 687, "13.0" },
-    { 21, 710, "14.0" },
-    { 22, 750, "16.0" },
-    { 23, 790, "18.0" },
-    { 24, 817, "20.0" },
+    {  9, 305, "3.0" },
+    { 10, 314, "3.2" }, 
+    { 11, 350, "3.5" }, 
+    { 12, 382, "4.0" },
+    { 13, 411, "4.5" },
+    { 14, 439, "5.0" },
+    { 15, 472, "5.6" },
+    { 16, 514, "6.3" },
+    { 17, 543, "6.9" },
 };
 
 // OLD copied comment!

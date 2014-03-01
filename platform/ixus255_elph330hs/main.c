@@ -27,11 +27,6 @@ void startup()
     boot();
 }
 
-/*
-1/2.3 sensor 
-*/
-
-// Focus length table in firmware @FFF4A3E0
 #define NUM_FL      101 // 101 zoom steps
 #define NUM_DATA    2   // 2 words each entry, FL in MM*1000, 100
 extern int focus_len_table[NUM_FL*NUM_DATA];
@@ -39,10 +34,10 @@ extern int focus_len_table[NUM_FL*NUM_DATA];
 // Conversion factor lens FL --> 35mm equiv
 // lens      35mm     CF
 // ----      ----     --
-// 5         28       ( 28/5) * 60 = 336  (min FL)
-// 40        224      (224/40) * 60 = 336  (max FL)
-#define CF_EFL      336
-#define	CF_EFL_DIV  60
+// 4.3       24       (24/4.3) * 43 = 240  (min FL)
+// 43        240      (240/43) * 43 = 240  (max FL)
+#define CF_EFL      240
+#define	CF_EFL_DIV  43
 
 const int zoom_points = NUM_FL;
 
@@ -63,7 +58,7 @@ int get_zoom_x(int zp) {
 // uses NB-4L, should be similar to other single cell li-ion
 long get_vbatt_min()
 {
-    return 3250; // shutdown is around 3.1
+    return 3400; // Playback works a bit lower
 }
 
 long get_vbatt_max()
