@@ -62,7 +62,18 @@ void *vid_get_viewport_live_fb()
 
 char *hook_raw_image_addr()
 {
-    return (char*)0x42365c30; //(Found @0xff413f98)
+    if (*((int*)(0x3a74)) != 0)
+        return (char*)0x48000000;
+    else
+        return (char*)0x44000000;
+}
+
+char *hook_alt_raw_image_addr()
+{
+    if (*((int*)(0x3a74)) == 0)
+        return (char*)0x48000000;
+    else
+        return (char*)0x44000000;
 }
 
 long hook_raw_size()             { return 0x0124ab50; }                    // Found @0xff49dd48

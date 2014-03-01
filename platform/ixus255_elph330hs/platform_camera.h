@@ -1,4 +1,4 @@
-// Camera - ixus140_elph130 - platform_camera.h
+// Camera - ixus255_elph330hs - platform_camera.h
 
 // This file contains the various settings values specific to the elph130 camera.
 // This file is referenced via the 'include/camera.h' file and should not be loaded directly.
@@ -28,14 +28,14 @@
     #define CAM_RAW_ROWPIX    4176 // Found @0xff1f7824
     #define CAM_RAW_ROWS      3062 // Found @0xff1f7830
 
-    #define CAM_JPEG_WIDTH                  4608
-    #define CAM_JPEG_HEIGHT                 3456
+    #define CAM_JPEG_WIDTH                  4000
+    #define CAM_JPEG_HEIGHT                 3000
 
-    // defined to pixels containing any data, commented excludes darker border
-    #define CAM_ACTIVE_AREA_X1              12   // 28
-    #define CAM_ACTIVE_AREA_Y1              10   // 20
-    #define CAM_ACTIVE_AREA_X2              4666 // 4652
-    #define CAM_ACTIVE_AREA_Y2              3492 // 3480
+    // defined to pixels containing any data
+    #define CAM_ACTIVE_AREA_X1              96
+    #define CAM_ACTIVE_AREA_Y1              18
+    #define CAM_ACTIVE_AREA_X2              4168
+    #define CAM_ACTIVE_AREA_Y2              3062
 
     #undef  CAM_UNCACHED_BIT
     #define CAM_UNCACHED_BIT  0x40000000 // Found @0xff03a200
@@ -46,7 +46,7 @@
     #define CAM_DNG_LENS_INFO              { 43,10, 430,10, 30,10, 69,10 } // See comments in camera.h
 
     // verified
-    #define cam_CFAPattern 0x01000201 // Green  Blue  Red  Green 
+    #define cam_CFAPattern 0x02010100 // Red Green Green Blue
 
     // TODO C&P from D10
     #define CAM_COLORMATRIX1                        \
@@ -114,7 +114,6 @@
     #define CAM_ALT_BUTTON_NAMES                        { "Playback", "Video" }
     #define CAM_ALT_BUTTON_OPTIONS                      { KEY_PLAYBACK, KEY_VIDEO }
 
-    // verified
     #undef  CAM_USB_EVENTID
     #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
@@ -145,7 +144,7 @@
     #undef CAM_AF_LED
     #define CAM_AF_LED                         1
 
-    #define CAM_DISABLE_RAW_IN_LOW_LIGHT_MODE  1     // For cameras with 'low light' mode that does not work with raw define this
+    #define  CAM_DISABLE_RAW_IN_HANDHELD_NIGHT_SCN  1     // For cameras with 'HandHeld Night Scene' mode that does not work with raw define this
 
 
 //----------------------------------------------------------

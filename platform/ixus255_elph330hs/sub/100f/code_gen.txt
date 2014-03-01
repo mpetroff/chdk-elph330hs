@@ -174,7 +174,7 @@ FILE capt_seq.c
 //////////////////////////////////////////////////////////////
 FUNC sig=task_CaptSeq name=capt_seq_task
 ASM
-FW 54
+FW 57
 >>>
 //"    BL      shooting_expo_iso_override\n"      // extra ISO override call doesn't appear to be needed on elph130
 <<<
@@ -203,20 +203,20 @@ ENDFUNC
 //////////////////////////////////////////////////////////////
 // patch for dfs + remote in quickshoot branch
 //////////////////////////////////////////////////////////////
-//FUNC ref=0
-//ASM
-//FW 31
-//PATCHSUB
-//FW $
-//ENDASM
-//ENDFUNC
+FUNC ref=0
+ASM
+FW 31
+PATCHSUB
+FW $
+ENDASM
+ENDFUNC
 
 //////////////////////////////////////////////////////////////
 // raw hook
 //////////////////////////////////////////////////////////////
 FUNC ref=1
 ASM
-FW 45
+FW 119
 PATCHSUB ref=0
 FW 1
 >>>
@@ -228,7 +228,7 @@ ENDFUNC
 
 FUNC ref=0
 ASM
-FW 35
+FW 45
 PATCHSUB ref=0
 ->FW
 ENDASM
