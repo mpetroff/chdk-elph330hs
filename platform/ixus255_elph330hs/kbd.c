@@ -17,9 +17,9 @@ static long kbd_mod_state[3] = { 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF };
 
 static KeyMap keymap[];
 
-// no keys in 0 or 1
+// Ignores power button
 #define KEYS_MASK0 (0xce3)
-#define KEYS_MASK1 (0xf00000)
+#define KEYS_MASK1 (0xb00000)
 #define KEYS_MASK2 (0x5000)
 
 #define SD_READONLY_FLAG    0x02000000 // Found @0xff5b8984, levent 0x20a
