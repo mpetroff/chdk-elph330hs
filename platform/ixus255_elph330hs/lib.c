@@ -62,8 +62,8 @@ void *vid_get_viewport_live_fb()
 
 char *hook_raw_image_addr()
 {
-    if (*((int*)(0x3a74)) != 0)
-        return (char*)0x48000000;
+    if (*((int*)(0x3a74)) != 0)     // 0x3a68 (@0xff0ba60c) + 0xc (@0xff0ba638)
+        return (char*)0x4adb23c0;   // Found @0xff5e3444 (incorrect in stubs_entry.S)
     else
         return (char*)0x44000000;
 }
@@ -71,7 +71,7 @@ char *hook_raw_image_addr()
 char *hook_alt_raw_image_addr()
 {
     if (*((int*)(0x3a74)) == 0)
-        return (char*)0x48000000;
+        return (char*)0x4adb23c0;
     else
         return (char*)0x44000000;
 }
