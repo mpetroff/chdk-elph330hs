@@ -115,10 +115,9 @@
     #define CAM_USB_EVENTID                         0x202 // Levent ID for USB control. Changed in DryOS R49 so needs to be overridable.
 
     #undef  CAMERA_MIN_DIST
-    #define CAMERA_MIN_DIST                 45      // Override min subject distance in macro mode
+    #define CAMERA_MIN_DIST                 47      // Override min subject distance in macro mode
     #undef CAMERA_MAX_DIST                 
-    // TODO largest value obtained focusing at distant things
-    #define CAMERA_MAX_DIST              775194       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
+    #define CAMERA_MAX_DIST              564972       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
     // TODO the following is required to make the IN_AF_LOCK_ONLY logic work, even though the camera has no MF
     // this requires PROPCASE_AFLOCK be set if using set_aflock from script
