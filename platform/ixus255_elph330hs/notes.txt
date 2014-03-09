@@ -18,6 +18,10 @@ Bracketing
 Extra long exposure
 ND filter state
 USB remote
+Grids
+Motion detection
+Games
+ISO override
 
 NOT IMPLEMENTED
 ***************
@@ -26,6 +30,8 @@ exmem support (note, camera has ~1.7MB regular heap free on startup with CHDK)
 
 OTHER ISSUES
 ************
+Subject distance override is only available with AF lock set
+If the alt key is set to video, the raw / debug shortcut will not work
 
 KNOWN BUGS
 **********
@@ -33,3 +39,8 @@ Zebra is sometimes offset
 
 Zoom lever doesn't work when zoom has been set to something other than 0 with
 set_zoom. Use set_zoom(0) to allow it to work again.
+
+CREDITS
+*******
+Ported by Matthew Petroff (http://www.mpetroff.net/).
+Based on IXUS140 / ELPH130 port.
