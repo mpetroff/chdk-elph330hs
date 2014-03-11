@@ -48,12 +48,19 @@
     // verified
     #define cam_CFAPattern 0x02010100 // Red Green Green Blue
 
-    // TODO C&P from D10
-    #define CAM_COLORMATRIX1                        \
-      14052, 10000,   -5229, 10000,   -1156, 10000, \
-      -1325, 10000,    9420, 10000,    2252, 10000, \
-       -498, 10000,    1957, 10000,    4116, 10000
-    #define cam_CalibrationIlluminant1      21      // D65
+    // Generated using X-Rite ColorChecker Camera Calibration software, v1.0.2
+    // with photos taken of a GretagMacbeth ColorChecker
+    // Matricies extracted with dcpTool: http://dcptool.sourceforge.net/
+    #define cam_CalibrationIlluminant1          17      // Standard Light A
+    #define cam_CalibrationIlluminant2          21      // D65
+    #define CAM_COLORMATRIX1 \
+       798, 1000,   -562, 1000,   1580, 1000, \
+       158, 1000,     66, 1000,   1375, 1000, \
+       528, 1000,  -1063, 1000,  12790, 1000
+    #define CAM_COLORMATRIX2 \
+     15311, 1000,  -6044, 1000,  -1478, 1000, \
+      -435, 1000,   9280, 1000,   1381, 1000, \
+       172, 1000,   1362, 1000,   3978, 1000
 
 
     // no separate erase button
