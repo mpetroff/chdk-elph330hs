@@ -63,7 +63,7 @@ void *vid_get_viewport_live_fb()
 char *hook_raw_image_addr()
 {
     if (*((int*)(0x3a74)) != 0)     // 0x3a68 (@0xff0ba60c) + 0xc (@0xff0ba638)
-        return (char*)0x4adb23c0;   // Found @0xff5e3444 (incorrect in stubs_entry.S)
+        return (char*)0x4adb23c0;   // Found @0xff5e3444
     else
         return (char*)0x44000000;
 }

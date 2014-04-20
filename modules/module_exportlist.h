@@ -258,6 +258,7 @@
 #define MODULESYM_SHOOTING_GET_AV96_FROM_APERTURE  0x705c2882
 #define MODULESYM_SHOOTING_GET_TV96_FROM_SHUTTER_SPEED 0x0cacd5a6
 #define MODULESYM_SHOOTING_GET_SHUTTER_SPEED_FROM_TV96 0xd8543206
+#define MODULESYM_SHOOTING_CAN_FOCUS               0x828b596a
 #define MODULESYM_RBF_CHAR_WIDTH                   0xb84bcf4d
 #define MODULESYM_RBF_FONT_HEIGHT                  0x968847ff
 #define MODULESYM_RBF_DRAW_CHAR                    0xc0f25d8b
@@ -320,6 +321,8 @@
 #define MODULESYM_UNLOCKAE                         0x9e43a611
 #define MODULESYM_DOAFLOCK                         0x347c4282
 #define MODULESYM_UNLOCKAF                         0x9e43a612
+#define MODULESYM_DOMFLOCK                         0x1913600e
+#define MODULESYM_UNLOCKMF                         0x9e43a69e
 #define MODULESYM_ENTER_ALT                        0x232f2d6b
 #define MODULESYM_EXIT_ALT                         0x31b0a543
 #define MODULESYM_GET_BATTERY_TEMP                 0x56f401d2
@@ -356,6 +359,8 @@
 #define MODULESYM_SHUTDOWN                         0x1c0580ed
 #define MODULESYM_CAMERA_SHUTDOWN_IN_A_SECOND      0xb91769c2
 #define MODULESYM_GET_USB_POWER                    0x723cbcc8
+#define MODULESYM_START_USB_HPTIMER                0xbf20d63e
+#define MODULESYM_STOP_USB_HPTIMER                 0x3b031f26
 #define MODULESYM_SWITCH_MODE_USB                  0x9552f290
 #define MODULESYM_CALL_FUNC_PTR                    0xf008034f
 #define MODULESYM__EXECUTEEVENTPROCEDURE           0xecfd9164
@@ -369,8 +374,9 @@
 #define MODULESYM_REMOTECAP_SET_TARGET             0xda4cf5c0
 #define MODULESYM_REMOTECAP_USING_DNG_MODULE       0xcdaf359d
 #define MODULESYM_REMOTECAP_SET_TIMEOUT            0x34afc5ca
+#define MODULESYM_REMOTECAP_GET_TARGET             0x53fdce54
 #define MODULESYM_SET_FOCUS_BYPASS                 0x74450101
 
-#define EXPORTLIST_LAST_IDX 356
+#define EXPORTLIST_LAST_IDX 362
 
 #endif

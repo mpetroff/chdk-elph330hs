@@ -98,6 +98,7 @@
     #define CAM_USES_ASPECT_CORRECTION      1       //camera uses the modified graphics primitives to map screens an viewports to buffers more sized
     #undef CAM_BITMAP_WIDTH
     #define CAM_BITMAP_WIDTH                960 // Actual width of bitmap screen in bytes
+    #undef  CAM_BITMAP_HEIGHT
     #define CAM_BITMAP_HEIGHT               270 // Actual height of bitmap screen in rows
 
     #define DRAW_ON_ACTIVE_BITMAP_BUFFER_ONLY   1   // Draw pixels on active bitmap buffer only.
@@ -127,10 +128,8 @@
     #undef CAMERA_MAX_DIST                 
     #define CAMERA_MAX_DIST              564972       // Define max distance that can be set in _MoveFocusLensToDistance (allow override for superzooms - SX30/SX40)
 
-    // TODO the following is required to make the IN_AF_LOCK_ONLY logic work, even though the camera has no MF
-    // this requires PROPCASE_AFLOCK be set if using set_aflock from script
-    #undef CAM_CAN_SD_OVER_NOT_IN_MF
-    #define  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     1 // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
+    #define CAM_SD_OVER_IN_AFL 1
+    #define CAM_SD_OVER_IN_MF  1
 
     // Seems to work
     #define CAM_DATE_FOLDER_NAMING                  0x400

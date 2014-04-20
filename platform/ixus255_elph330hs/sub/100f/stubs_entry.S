@@ -54,11 +54,12 @@ DEF(recreview_hold                          ,0x00002d68) // Found @0xff08a5c8
 DEF(active_palette_buffer                   ,0x0000a0dc) // Found @0xff24ccf0
 DEF(palette_buffer_ptr                      ,0x0000a0e0) // Found @0xff24d1ac
 // Offset from start of palette_buffer to color data = 4 (Found @0xff409dbc)
-// Camera has 2 RAW buffers @ 0x44000000 & 0x48000000
+// Camera has 2 RAW buffers @ 0x44000000 & 0x4adb23c0
 //  Note: active buffer --> raw_buffers[active_raw_buffer]
 //        other buffer  --> raw_buffers[active_raw_buffer^1]
-DEF(raw_buffers                             ,0xff5b7c38) // Found @0xff5b7c38
+DEF(raw_buffers                             ,0xff5e3440) // Found @0xff5e3440
 DEF(active_raw_buffer                       ,0x00003a74) // Found @0xff0ba69c
+DEF(fileio_semaphore                        ,0x00003764) // Found @0xff0a93b0
 
 // Values below go in 'lib.c':
 //void *vid_get_bitmap_fb()        { return (void*)0x406c5000; }             // Found @0xff08dfd0
@@ -123,7 +124,7 @@ DEF(_nrflag,0xcf74) // Found @ ff2f3000 (0xcf74) & ff2f303c (+0x00)
 NHSTUB(AllocateUncacheableMemory              ,0xff03a1b8) //112
 NHSTUB(Close                                  ,0xff035144) //120
 NHSTUB(CreateTask                             ,0x0068ab8c) //120
-NHSTUB(DebugAssert                            ,0x0068b104) //111
+NHSTUB(DebugAssert                            ,0x0068b104) //107
 NHSTUB(DeleteDirectory_Fut                    ,0xff034b44) //116
 NHSTUB(DoAELock                               ,0xff036cd4) //120
 NHSTUB(DoAFLock                               ,0xff0369f4) //120
@@ -146,8 +147,8 @@ NHSTUB(GetBatteryTemperature                  ,0xff0976f0) //102
 NHSTUB(GetCCDTemperature                      ,0xff09767c) //102
 NHSTUB(GetCurrentAvValue                      ,0xff226f4c) //120
 NHSTUB(GetDrive_ClusterSize                   ,0xff0aaa20) //122
-NHSTUB(GetDrive_FreeClusters                  ,0xff0ab200) //  6
-NHSTUB(GetDrive_TotalClusters                 ,0xff0ab1d8) //  6
+NHSTUB(GetDrive_FreeClusters                  ,0xff0ab200) //119
+NHSTUB(GetDrive_TotalClusters                 ,0xff0ab1d8) //122
 NHSTUB(GetFocusLensSubjectDistance            ,0xff2261c0) //102
 NHSTUB(GetFocusLensSubjectDistanceFromLens    ,0xff226554) //  3
 NHSTUB(GetImageFolder                         ,0xff1ff210) //122
@@ -191,7 +192,7 @@ NHSTUB(SetAutoShutdownTime                    ,0xff0cd444) //120
 NHSTUB(SetCurrentCaptureModeType              ,0xff0da4d0) //120
 NHSTUB(SetFileAttributes                      ,0xff035548) //  6
 NHSTUB(SetFileTimeStamp                       ,0xff0354d0) //  6
-NHSTUB(SetLogicalEventActive                  ,0xff0cd148) //101
+NHSTUB(SetLogicalEventActive                  ,0xff0cd148) //120
 NHSTUB(SetParameterData                       ,0xff244ad0) //101
 NHSTUB(SetPropertyCase                        ,0xff0cadb8) //101
 NHSTUB(SetScriptMode                          ,0xff0cd198) //120
@@ -259,6 +260,11 @@ NHSTUB(strtolx                                ,0xff03aa34) //109
    DEF(task_MovieRecord                       ,0xff230bfc) //120
    DEF(task_PhySw                             ,0xff031e7c) //120
    DEF(hook_CreateTask                        ,0x0068ab8c) //105
-NHSTUB(time                                   ,0x00693c94) //  6
+NHSTUB(time                                   ,0x00693c94) //119
 NHSTUB(vsprintf                               ,0xff00b820) //115
 NHSTUB(EngDrvRead                             ,0xff03324c) //102
+NHSTUB(CancelHPTimer                          ,0xff0c627c) //119
+NHSTUB(SetHPTimerAfterNow                     ,0xff0c6174) //119
+NHSTUB(SS_MFOn                                ,0xff2331b8) //120
+NHSTUB(SS_MFOff                               ,0xff2331c8) //120
+NHSTUB(GetAdChValue                           ,0xff08f738) //120

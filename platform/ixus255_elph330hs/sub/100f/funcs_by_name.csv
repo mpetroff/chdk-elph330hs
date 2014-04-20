@@ -368,6 +368,7 @@
 0xff034cdc,Fwrite_Fut
 0xff034cdc,Fwrite_Fut_FW
 0xff0c4368,get_resource_pointer
+0xff08f738,GetAdChValue
 0xff08f738,GetAdChValue_FW
 0xff4994dc,GetAdjAFInteg_FW
 0xff09e900,GetAdjDataAreaAddress_FW
@@ -1121,7 +1122,6 @@
 0xff16c104,QuietImager_FW
 0xff0e2e48,rand
 0xff005d80,Read
-0xff005d80,read
 0xff005d80,Read_FW
 0xff3ba4f4,ReadFastDir
 0xff2d16b4,realloc
@@ -1454,6 +1454,8 @@
 0xff2330e0,SS.MoveOpticalZoomToWide_FW
 0xff2331a8,SS.UnlockAE_FW
 0xff233188,SS.UnlockAF_FW
+0xff2331c8,SS_MFOff
+0xff2331b8,SS_MFOn
 0xff0e2d6c,sscanf_FW
 0xff0c03f8,SSFS_CompleteCaptModeChange_FW
 0xff0c03f8,SSFS_CompleteFileWrite_FW
@@ -1757,7 +1759,6 @@
 0x0068b070,WaitForAnyEventFlagStrictly
 0xff3e0ffc,WaitMoveZoomLensComplete_FW
 0xff035198,Write
-0xff035198,write
 0xff035198,Write_FW
 0xff09e018,WRITEADJTABLETOFROM_FW
 0xff09e050,WRITEADJUSTMENTDATATOFROM_FW

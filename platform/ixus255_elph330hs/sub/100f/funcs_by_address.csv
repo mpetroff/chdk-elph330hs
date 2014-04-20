@@ -76,7 +76,6 @@
 0xff005b2c,open
 0xff005bdc,close
 0xff005d80,Read
-0xff005d80,read
 0xff005d80,Read_FW
 0xff00a960,RotateConsoleZOder_FW
 0xff00ab70,CPrintf_FW
@@ -162,7 +161,6 @@
 0xff035144,Close
 0xff035144,Close_FW
 0xff035198,Write
-0xff035198,write
 0xff035198,Write_FW
 0xff0351ec,j_Open_FW
 0xff0351f0,j_Close_FW
@@ -267,6 +265,7 @@
 0xff08e78c,DispCon_SaveLcdGainAdjParameter_FW
 0xff08e7a8,DispCon_ShowHdChart_FW
 0xff08f730,GetAdVBattBottom_FW
+0xff08f738,GetAdChValue
 0xff08f738,GetAdChValue_FW
 0xff08f774,_avsShowAdjData_FW
 0xff08f968,_avsInit_FW
@@ -846,7 +845,9 @@
 0xff233198,SS.DoAELock_FW
 0xff2331a8,SS.UnlockAE_FW
 0xff2331b8,SS.MFOn_FW
+0xff2331b8,SS_MFOn
 0xff2331c8,SS.MFOff_FW
+0xff2331c8,SS_MFOff
 0xff2331d8,SS.Create_FW
 0xff23322c,InitializeAdjustmentSystem_FW
 0xff233264,TerminateAdjustmentSystem_FW
