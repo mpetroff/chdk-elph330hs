@@ -289,6 +289,7 @@
             shooting_get_av96_from_aperture,
             shooting_get_tv96_from_shutter_speed,
             shooting_get_shutter_speed_from_tv96,
+            shooting_can_focus,
 
             rbf_char_width,
             rbf_font_height,
@@ -363,6 +364,8 @@
             UnlockAE,
             DoAFLock,
             UnlockAF,
+            DoMFLock,
+            UnlockMF,
 
             enter_alt,
             exit_alt,
@@ -409,6 +412,9 @@
             camera_shutdown_in_a_second,
 
             get_usb_power,
+            start_usb_HPtimer,
+            stop_usb_HPtimer,
+
             switch_mode_usb,
 
             call_func_ptr,
@@ -426,6 +432,7 @@
             remotecap_set_target,
             remotecap_using_dng_module,
             remotecap_set_timeout,
+            remotecap_get_target,
 
            set_focus_bypass,
 }

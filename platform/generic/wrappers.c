@@ -168,10 +168,6 @@ long lens_get_zoom_pos()
     return _GetZoomLensCurrentPosition();
 }
 
-void lens_set_zoom_pos(long newpos)
-{
-}
-
 long lens_get_zoom_point()
 {
     return _GetZoomLensCurrentPoint();
@@ -336,6 +332,8 @@ short SetAE_ShutterSpeed(short *tv)             { return _SetAE_ShutterSpeed(tv)
     return _creat(name, flags);
 }*/
 
+extern int fileio_semaphore;
+
 int open (const char *name, int flags, int mode )
 {
 #if !CAM_DRYOS
@@ -346,22 +344,45 @@ int open (const char *name, int flags, int mode )
     if(!name || name[0]!='A')
         return -1;
 #endif
+/*
 #if defined(CAM_STARTUP_CRASH_FILE_OPEN_FIX)	// enable fix for camera crash at startup when opening the conf / font files
 												// see http://chdk.setepontos.com/index.php?topic=6179.0
 	if (flags == O_RDONLY)						// At startup opening the conf / font files conflicts with Canon task if use _Open. Camera can randomly crash.
 		return _open(name, flags, mode);
 #endif
+*/
+#if CAM_DRYOS
+    _TakeSemaphore(fileio_semaphore,0);
+    int fd = _Open(name, flags, mode);
+    _GiveSemaphore(fileio_semaphore);
+    return fd;
+#else
     return _Open(name, flags, mode);
+#endif
 }
 
 int close (int fd)
 {
+#if CAM_DRYOS
+    _TakeSemaphore(fileio_semaphore,0);
+    int r = _Close(fd);
+    _GiveSemaphore(fileio_semaphore);
+    return r;
+#else
     return _Close(fd);
+#endif
 }
 
 int write (int fd, const void *buffer, long nbytes)
 {
+#if CAM_DRYOS
+    _TakeSemaphore(fileio_semaphore,0);
+    int r = _Write(fd, buffer, nbytes);
+    _GiveSemaphore(fileio_semaphore);
+    return r;
+#else
     return _Write(fd, buffer, nbytes);
+#endif
 }
 
 int read (int fd, void *buffer, long nbytes)
@@ -427,7 +448,9 @@ DIR *opendir(const char* name)
     // Save camera internal DIR structure (we don't care what it is)
 #if defined(CAM_DRYOS)
     extern void *_OpenFastDir(const char* name);
+    _TakeSemaphore(fileio_semaphore,0);
     dir->cam_DIR = _OpenFastDir(name);
+    _GiveSemaphore(fileio_semaphore);
 #else
     extern void *_opendir(const char* name);
     dir->cam_DIR = _opendir(name);
@@ -496,7 +519,13 @@ int closedir(DIR *d)
     int rv = -1;
     if (d && d->cam_DIR)
     {
+#if defined(CAM_DRYOS)
+        _TakeSemaphore(fileio_semaphore,0);
         rv = _closedir(d->cam_DIR);
+        _GiveSemaphore(fileio_semaphore);
+#else
+        rv = _closedir(d->cam_DIR);
+#endif
         // Mark closed (just in case)
         d->cam_DIR = 0;
         // Free allocated memory
@@ -1043,22 +1072,38 @@ void TurnOffDisplay(void)
 
 void DoAELock(void)
 {
-  _DoAELock();
+  if (!camera_info.state.mode_play)
+  {
+     _DoAELock();
+  }
 }
 
 void UnlockAE(void)
 {
-  _UnlockAE();
+  if (!camera_info.state.mode_play)
+  {
+     _UnlockAE();
+  }
 }
 
 void DoAFLock(void)
 {
-  _DoAFLock();
+  if (!camera_info.state.mode_play)
+  {
+     int af_lock=1;
+     _DoAFLock();
+     set_property_case(PROPCASE_AF_LOCK,&af_lock,sizeof(af_lock));
+  }
 }
 
 void UnlockAF(void)
 {
-  _UnlockAF();
+  if (!camera_info.state.mode_play)
+  {
+     int af_lock=0;
+     _UnlockAF();
+     set_property_case(PROPCASE_AF_LOCK,&af_lock,sizeof(af_lock));
+  }
 }
 
 int EngDrvRead(int gpio_reg)
@@ -1666,14 +1711,45 @@ int _rand(void) {
 };
 #endif
 
-/*
-return the usb state as seen by the firmware (after any masking for remote)
-TODO this should just check the modified physw bit, but would requires
-kbd.c code for each camera
-*/
-extern int get_usb_bit();
-int get_usb_bit_physw(void)
+//  USB remote high speed timer for pulse width measurement and pulse counting
+
+extern int _SetHPTimerAfterNow(int delay, int(*good_cb)(int, int), int(*bad_cb)(int, int), int );
+extern int _CancelHPTimer(int);
+extern int usb_HPtimer_bad(int, int);
+extern int usb_HPtimer_good(int, int);
+
+int usb_HPtimer_handle=0;
+int usb_HPtimer_error_count=0;
+
+static int ARM_usb_HPtimer_good(int time, int interval) { return usb_HPtimer_good(time, interval); }
+static int ARM_usb_HPtimer_bad(int time, int interval) { return usb_HPtimer_bad(time, interval); }
+
+int start_usb_HPtimer(int interval)            // return 0 if timer already running or error,  1 if successful
 {
-    return (conf.remote_enable == 0 && get_usb_bit());
+#ifdef CAM_REMOTE_USB_HIGHSPEED
+
+    if ( usb_HPtimer_handle == 0 )
+    {
+	if(interval < CAM_REMOTE_HIGHSPEED_LIMIT) interval=CAM_REMOTE_HIGHSPEED_LIMIT;
+        usb_HPtimer_handle = _SetHPTimerAfterNow(interval,ARM_usb_HPtimer_good,ARM_usb_HPtimer_bad,interval);
+        if (!(usb_HPtimer_handle & 0x01)) return 1 ;
+        usb_HPtimer_handle = 0 ;
+    }
+#endif
+    return 0;
 }
+
+int stop_usb_HPtimer() 
+{
+#ifdef CAM_REMOTE_USB_HIGHSPEED
+    if( usb_HPtimer_handle ) 
+    {
+	_CancelHPTimer(usb_HPtimer_handle);
+	usb_HPtimer_handle = 0 ;
+	return 1 ;
+    }
+#endif
+    return 0;
+}
+
 

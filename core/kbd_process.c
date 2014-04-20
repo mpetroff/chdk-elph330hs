@@ -64,7 +64,7 @@ int kbd_is_blocked()
 
 void enter_alt()
 {
-    get_usb_power(CLEAR_USB_REGISTERS);         // Prevent previous USB remote pulse from starting script.
+    clear_usb_power();         // Prevent previous USB remote pulse from starting script.
     kbd_blocked = 1;
     gui_set_alt_mode_state(ALT_MODE_ENTER);
 }
@@ -77,9 +77,12 @@ void exit_alt()
 
 //-------------------------------------------------------------------
 // Core keyboard handler
+
 long kbd_process()
 {
     static int key_pressed;
+
+    if( usb_HPtimer_handle==0) usb_remote_key();
 
     if (camera_info.perf.md_af_tuning)
     {

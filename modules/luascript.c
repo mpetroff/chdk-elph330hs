@@ -32,6 +32,7 @@
 #include "debug_led.h"
 #include "meminfo.h"
 #include "callfunc.h"
+#include "usb_remote.h"
 
 #include "script_api.h"
 #include "curves.h"
@@ -383,6 +384,15 @@ static int luaCB_set_aflock(lua_State* L)
   if (val>0) DoAFLock();  // 1: enable AFLock
   else UnlockAF();       // 0: disable unlock AF
   return 0;
+}
+
+static int luaCB_set_mf(lua_State* L) 
+{
+  int val = luaL_checknumber(L, 1);
+  if (val>0) val=DoMFLock();  // 1: enable 
+  else val=UnlockMF();       // 0: disable
+  lua_pushnumber(L, val); 
+  return 1; 
 }
 
 
@@ -746,19 +756,29 @@ static int luaCB_set_focus_interlock_bypass( lua_State* L )
 
 static int luaCB_set_focus( lua_State* L )
 {
-    int to = luaL_checknumber( L, 1 );
-
-    if (camera_info.cam_has_manual_focus)
+    int sd = luaL_checknumber( L, 1 );
+    // if sd override not available now, fail immediately without calling set_focus
+    // to avoid unexpected results with SET_LATER
+    if(!shooting_can_focus())
     {
-        if (shooting_get_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+    // NOTE duplicated in modules/luascript.c and lib/ubasic/ubasic.c
+    // in AF lock or MF (canon or set by MF functions), set focus now
+    if (shooting_get_prop(camera_info.props.af_lock) 
+      || shooting_get_focus_mode()
+      || camera_info.state.mode_video)  // TODO video needs to be investigated, carried over from old code
+    {
+      shooting_set_focus(sd, SET_NOW);
     }
     else
     {
-        if (shooting_get_common_focus_mode() || camera_info.state.mode_video) shooting_set_focus(to, SET_NOW);
-        else shooting_set_focus(to, SET_LATER);    
+      // in an AF mode, set later
+      shooting_set_focus(sd, SET_LATER);
     }
-  return 0;
+    lua_pushboolean(L, 1); 
+    return 1; 
 }
 
 static int luaCB_set_iso_mode( lua_State* L )
@@ -1243,6 +1263,17 @@ static int luaCB_set_autostart( lua_State* L )
 static int luaCB_get_usb_power( lua_State* L )
 {
   lua_pushnumber( L, get_usb_power(luaL_optnumber( L, 1, 0 )) );
+  return 1;
+}
+
+// enable USB High Perfomance timer
+static int luaCB_enable_highspeed_usb( lua_State* L )
+{
+  int val= luaL_checknumber(L,1);
+  if (val > 0 )
+     val=start_usb_HPtimer(val);
+  else  val=stop_usb_HPtimer() ;
+  lua_pushnumber(L, val);
   return 1;
 }
 
@@ -2442,6 +2473,17 @@ static int luaCB_init_usb_capture( lua_State* L )
     lua_pushboolean(L,remotecap_set_target(what,startline,numlines));
     return 1;
 }
+
+/*
+selected=get_usb_capture_target()
+selected = bitmask passed to init, or 0 if capture not configured or timed out/canceled
+*/
+static int luaCB_get_usb_capture_target( lua_State* L )
+{
+    lua_pushnumber(L,remotecap_get_target());
+    return 1;
+}
+
 /*
 set_remotecap_timeout([timeout])
 timeout:
@@ -2657,6 +2699,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_autostart)
     FUNC(set_autostart)
     FUNC(get_usb_power)
+    FUNC(enable_highspeed_usb)
     FUNC(enter_alt)
     FUNC(exit_alt)
     FUNC(shut_down)
@@ -2715,6 +2758,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(get_draw_title_line)
     FUNC(set_aelock)
     FUNC(set_aflock)
+    FUNC(set_mf)
     FUNC(set_curve_state)
     FUNC(get_curve_state)
     FUNC(set_curve_file)
@@ -2767,6 +2811,7 @@ static const luaL_Reg chdk_funcs[] = {
     FUNC(write_usb_msg)
     FUNC(get_usb_capture_support)
     FUNC(init_usb_capture)
+    FUNC(get_usb_capture_target)
     FUNC(set_usb_capture_timeout)
 
     FUNC(iso_to_sv96)

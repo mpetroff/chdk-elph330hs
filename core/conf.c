@@ -12,6 +12,7 @@
 #include "core.h"
 #include "fileutil.h"
 #include "lang.h"
+#include "usb_remote.h"
 
 #include "modules.h"
 #include "module_def.h"
@@ -504,6 +505,11 @@ void conf_info_func(unsigned short id)
         break;
     case  82: 
         shooting_video_bitrate_change(conf.video_bitrate);
+        break;
+    case 200:
+    case 204:
+    case 205:   // USB Remote
+        set_usb_remote_state();
         break;
     case 220:
 #if CAM_ADJUSTABLE_ALT_BUTTON
@@ -1105,11 +1111,10 @@ void conf_save()
 
             config_save(confinfo_handlers[i].ci, confinfo_handlers[i].filename, confinfo_handlers[i].start_id);
             config_update_last_saved(confinfo_handlers[i].ci);
-
-            if (confinfo_handlers[i].start_id == CONF_CORE)
-                save_params_values(0);
         }
     }
+    // Save current script parameters if they have changed.
+    save_params_values(0);
 }
 
 int save_config_file(int config_base, const char *filename)

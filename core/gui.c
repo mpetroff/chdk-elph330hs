@@ -94,12 +94,10 @@ const char* gui_change_enum2(const CMenuItem *menu_item, int change)
 static const char* gui_bracket_values_modes[] = { "Off", "1/3 Ev","2/3 Ev", "1 Ev", "1 1/3Ev", "1 2/3Ev", "2 Ev", "2 1/3Ev", "2 2/3Ev", "3 Ev", "3 1/3Ev", "3 2/3Ev", "4 Ev" };
 static const char* gui_bracket_type_modes[] =   { "+/-", "-", "+", "-/+" };
 
-#if CAM_CAN_SD_OVERRIDE
 static CMenuItem sd_bracket[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.subj_dist_bracket_value,  MENU_MINMAX(0, 30000) ),
     MENU_ITEM   (0, 0,  MENUITEM_BOOL,                                      &conf.subj_dist_bracket_koef,   0 ),
 };
-#endif
 
 static CMenuItem iso_bracket[2] = {
     MENU_ITEM   (0, 0,  MENUITEM_INT|MENUITEM_F_UNSIGNED|MENUITEM_F_MINMAX, &conf.iso_bracket_value,        MENU_MINMAX(0, 10000) ),
@@ -111,9 +109,7 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 #if CAM_HAS_IRIS_DIAPHRAGM
     MENU_ENUM2  (0x62,LANG_MENU_AV_BRACKET_VALUE,           &conf.av_bracket_value,         gui_bracket_values_modes ),
 #endif
-#if CAM_CAN_SD_OVERRIDE
     MENU_ITEM   (0x5e,LANG_MENU_SUBJ_DIST_BRACKET_VALUE,    MENUITEM_STATE_VAL_PAIR,        &sd_bracket,                        100 ),
-#endif
     MENU_ITEM   (0x74,LANG_MENU_ISO_BRACKET_VALUE,          MENUITEM_STATE_VAL_PAIR,        &iso_bracket,                       10 ),
     MENU_ENUM2  (0x60,LANG_MENU_BRACKET_TYPE,               &conf.bracket_type,             gui_bracket_type_modes ),
     MENU_ITEM   (0x5b,LANG_MENU_CLEAR_BRACKET_VALUES,       MENUITEM_BOOL,                  &conf.clear_bracket,                0 ),
@@ -124,9 +120,27 @@ static CMenuItem bracketing_in_continuous_submenu_items[] = {
 static CMenu bracketing_in_continuous_submenu = {0x2c,LANG_MENU_BRACKET_IN_CONTINUOUS_TITLE, bracketing_in_continuous_submenu_items };
 
 //-------------------------------------------------------------------
+static const char* gui_USB_switch_types_enum(int change, int arg)
+{
+    static const char* modes[] = { "None","OnePush", "TwoPush", "CA-1" };    // note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
+	gui_enum_value_change(&conf.remote_switch_type,change,sizeof(modes)/sizeof(modes[0]));
 
-const char* gui_USB_switch_types[] = { "None","OnePush", "TwoPush", "CA-1" };								// note : make sure # of entries less than NUM_USB_INPUT_DRV in usb_remote.c
-const char* gui_USB_control_modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; 	// note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
+    if (change)
+        set_usb_remote_state();
+
+    return modes[conf.remote_switch_type];
+}
+
+static const char* gui_USB_control_modes_enum(int change, int arg)
+{
+    static const char* modes[] = { "None", "Normal", "Quick", "Burst", "Bracket","Zoom", "Video" }; // note : make sure # of entries less than NUM_USB_MODULES in usb_remote.c
+	gui_enum_value_change(&conf.remote_control_mode,change,sizeof(modes)/sizeof(modes[0]));
+
+    if (change)
+        set_usb_remote_state();
+
+    return modes[conf.remote_control_mode];
+}
 
 #ifndef CAM_REMOTE_USES_PRECISION_SYNC
 static CMenuItem synch_delay[2] = {
@@ -136,9 +150,9 @@ static CMenuItem synch_delay[2] = {
 #endif
 
 static CMenuItem remote_submenu_items[] = {
-    MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL,                  &conf.remote_enable, 0),
-    MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_DEVICE,  	        &conf.remote_switch_type,       gui_USB_switch_types ),
-    MENU_ENUM2  (0x5f,LANG_MENU_REMOTE_LOGIC,  	            &conf.remote_control_mode,      gui_USB_control_modes ),	
+    MENU_ITEM   (0x71,LANG_MENU_REMOTE_ENABLE,              MENUITEM_BOOL|MENUITEM_ARG_CALLBACK, &conf.remote_enable, (int)set_usb_remote_state),
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_DEVICE,  	        MENUITEM_ENUM, gui_USB_switch_types_enum, 0),
+    MENU_ITEM   (0x5f,LANG_MENU_REMOTE_LOGIC,  	            MENUITEM_ENUM, gui_USB_control_modes_enum, 0),	
     MENU_ITEM   (0x0, LANG_MENU_REMOTE_OPTIONS,             MENUITEM_SEPARATOR,             0, 0 ), 
     MENU_ITEM   (0x5c,LANG_MENU_SYNCH_ENABLE,               MENUITEM_BOOL,                  &conf.synch_enable, 0),
  #ifndef CAM_REMOTE_USES_PRECISION_SYNC
@@ -153,10 +167,10 @@ static CMenu remote_submenu = {0x86,LANG_MENU_REMOTE_PARAM_TITLE, remote_submenu
 
 //-------------------------------------------------------------------
 
-static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s" };
+static const char* gui_autoiso_shutter_modes[] = { "Auto", "1/2s", "1/4", "1/6", "1/8s", "1/15s", "1/30s", "1/60s", "1/125s", "1/250s", "1/500s", "1/1000s", "1/2000s" };
 
-static const char* gui_autoiso2_shutter_modes[] = { "Off", "1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
-                 	                                "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s"}; 
+static const char* gui_autoiso2_shutter_modes[] = { "Off", "1s", "1/2","1/4s", "1/6s", "1/8s", "1/12s", "1/15s", "1/20s", "1/25s", "1/30s",  
+                 	                                "1/40s", "1/50s", "1/60s", "1/80s", "1/100s", "1/125s", "1/160s", "1/250s", "1/500s", "1/1000s", "1/2000s" }; 
 
 static const char* gui_overexp_ev_modes[] = { "Off", "-1/3 Ev", "-2/3 Ev", "-1 Ev", "-1 1/3Ev", "-1 2/3Ev", "-2 Ev" };
 
@@ -1523,12 +1537,10 @@ static CMenuItem av_override_items[2] = {
 };
 #endif
 
-#if CAM_CAN_SD_OVERRIDE
 static CMenuItem sd_override_items[2] = {
     MENU_ITEM   (0, 0,   MENUITEM_ENUM|MENUITEM_SD_INT,                     gui_subj_dist_override_value_enum,  MAX_DIST ),
     MENU_ITEM   (0, 0,   MENUITEM_ENUM,                                     gui_subj_dist_override_koef_enum,   0 ),
 };
-#endif
 
 static const char* gui_raw_nr_modes[] =                     { "Auto", "Off", "On"};
 
@@ -1541,9 +1553,7 @@ static CMenuItem operation_submenu_items[] = {
     MENU_ITEM   (0x62,LANG_MENU_OVERRIDE_AV_VALUE,          MENUITEM_STATE_VAL_PAIR,&av_override_items,                 0 ),
 #endif
     MENU_ITEM   (0x74,LANG_MENU_OVERRIDE_ISO_VALUE,         MENUITEM_STATE_VAL_PAIR,&iso_override_items,                10 ),
-#if CAM_CAN_SD_OVERRIDE
     MENU_ITEM   (0x5e,LANG_MENU_OVERRIDE_SUBJ_DIST_VALUE,   MENUITEM_STATE_VAL_PAIR,&sd_override_items,                 0 ),
-#endif
     MENU_ITEM   (0x5c,LANG_MENU_MISC_FAST_EV,               MENUITEM_STATE_VAL_PAIR,&fast_ev_switch,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_EXP_COMP,            MENUITEM_STATE_VAL_PAIR,&flash_exp_comp,                    0 ),
     MENU_ITEM   (0x5c, LANG_MENU_FLASH_MANUAL_OVERRIDE,     MENUITEM_STATE_VAL_PAIR,&manual_flash,                      0 ),
@@ -2461,6 +2471,8 @@ static char* gui_shortcut_text(int button)
     case KEY_MENU:
         is_menu_shortcut = 1;
         return "MENU*";
+    case KEY_VIDEO:
+        return "VIDEO";
     default:
         return "?";
     }
@@ -2548,7 +2560,7 @@ static void gui_draw_alt_helper()
         y += FONT_HEIGHT;
     }
 
-#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE
+#if !CAM_HAS_ERASE_BUTTON
 #ifdef OPT_DEBUGGING
     if (conf.debug_shortcut_action)
         y = shortcut_text(x, y, SHORTCUT_TOGGLE_RAW,LANG_MENU_DEBUG_SHORTCUT_ACTION,gui_debug_shortcut_modes[conf.debug_shortcut_action], MAKE_COLOR(COLOR_ALT_BG, COLOR_FG));
@@ -2746,7 +2758,7 @@ int gui_chdk_kbd_process()
 
     int reset_helper = 0;
 
-#if !CAM_HAS_ERASE_BUTTON && CAM_CAN_SD_OVERRIDE        // ALT RAW toggle kbd processing if camera has SD override but no erase button
+#if !CAM_HAS_ERASE_BUTTON                              // ALT RAW toggle kbd processing if camera has SD override but no erase button
     if (kbd_is_key_clicked(SHORTCUT_TOGGLE_RAW))
     {
         if (conf.debug_shortcut_action > 0)
@@ -2790,7 +2802,6 @@ int gui_chdk_kbd_process()
         gui_menu_init(&script_submenu);
         gui_default_kbd_process_menu_btn();
     }
-#if CAM_CAN_SD_OVERRIDE                                 // ALT button processing if camera has SD override
     else
     {
 #if !CAM_HAS_MANUAL_FOCUS
@@ -2856,7 +2867,6 @@ int gui_chdk_kbd_process()
             }
         }
     }
-#endif
 
     if (reset_helper)
     {

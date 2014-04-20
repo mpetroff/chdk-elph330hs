@@ -13,6 +13,7 @@
 #include "gui_usb.h"
 #include "gui_space.h"
 #include "histogram.h"
+#include "usb_remote.h"
 #ifdef CAM_HAS_GPS
 #include "gps.h"
 #endif
@@ -866,7 +867,7 @@ void gui_kbd_shortcuts()
             kbd_shortcut(SHORTCUT_TOGGLE_OSD, &conf.show_osd, 1);
             kbd_shortcut(SHORTCUT_DISABLE_OVERRIDES, &conf.override_disable, 1);
         }
-#if !CAM_HAS_MANUAL_FOCUS && CAM_HAS_ZOOM_LEVER && CAM_CAN_SD_OVERRIDE
+#if !CAM_HAS_MANUAL_FOCUS && CAM_HAS_ZOOM_LEVER
         // Todo, check for AF and if its running, don't override
         if (kbd_is_key_pressed(SHORTCUT_SD_SUB)) {
             if (!(conf.override_disable==1) && shooting_can_focus() && shooting_get_common_focus_mode()) {

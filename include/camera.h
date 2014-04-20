@@ -40,6 +40,8 @@
     #undef  CAM_ALT_BUTTON_OPTIONS              // Define the list of options for the ALT button - e.g. { KEY_PRINT, KEY_DISPLAY }
     #define CAM_REMOTE                      1   // Camera supports USB-remote
     #undef  CAM_REMOTE_USES_PRECISION_SYNC      // Disable experimental USB remote  precision sync patch
+    #undef  CAM_REMOTE_USB_HIGHSPEED            // Enable highspeed measurements of pulse width & counts on USB port 
+    #define CAM_REMOTE_HIGHSPEED_LIMIT 1000     // Set lowest timer value settable by user
     #undef  GPIO_VSYNC_CURRENT                  // USB remote precision sync : might be 0xC0F070C8 or 0xC0F07008 (http://chdk.setepontos.com/index.php?topic=8312.msg104027#msg104027)
     #undef  CAM_MULTIPART                       // Camera supports SD-card multipartitioning
     #define CAM_HAS_ZOOM_LEVER              1   // Camera has dedicated zoom buttons
@@ -49,11 +51,12 @@
     #define CAM_HAS_IRIS_DIAPHRAGM          1   // Camera has real diaphragm mechanism (http://en.wikipedia.org/wiki/Diaphragm_%28optics%29)
     #undef  CAM_HAS_ND_FILTER                   // Camera has build-in ND filter
     #undef  CAM_HAS_NATIVE_ND_FILTER            // Camera has built-in ND filter with Canon menu support for enable/disable
-    #define CAM_CAN_SD_OVER_NOT_IN_MF       1   // Camera allows subject distance (focus) override when not in manual focus mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK          // Camera allows subject distance (focus) override when in AF Lock mode
-    #undef  CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY     // Camera allows subject distance (focus) override only when in AF Lock mode OR in movie mode
-    #define CAM_CAN_SD_OVERRIDE             1   // Camera allows to do subject distance override
-    #define CAM_HAS_MANUAL_FOCUS            1   // Camera has manual focus mode
+
+    #define CAM_HAS_MANUAL_FOCUS            1   // Camera has native manual focus mode (disables MF shortcut feature)
+    #undef  CAM_SD_OVER_IN_AF                   // Camera allows SD override if MF & AFL not set
+    #undef  CAM_SD_OVER_IN_AFL                  // Camera allows SD override when AFL is set
+    #undef  CAM_SD_OVER_IN_MF                   // Camera allows SD override when MF is set
+
     #define CAM_HAS_USER_TV_MODES           1   // Camera has tv-priority or manual modes with ability to set tv value
     #undef  CAM_SHOW_OSD_IN_SHOOT_MENU          // On some cameras Canon shoot menu has additional functionality and useful in this case to see CHDK OSD in this mode
     #define CAM_CAN_UNLOCK_OPTICAL_ZOOM_IN_VIDEO 1 // Camera can unlock optical zoom in video (if it is locked)

@@ -94,6 +94,14 @@ int   shooting_get_exif_subject_dist()          { return shooting_get_prop_int(P
 int   shooting_is_flash()                       { return shooting_get_prop_int(PROPCASE_IS_FLASH_READY); }
 int   shooting_in_progress()                    { return shooting_get_prop_int(PROPCASE_SHOOTING); }
 
+/*
+get focus mode as used in script
+essentially returns PROPCASE_REAL_FOCUS_MODE,
+except MF and Macro values are swapped (presumably for backward compatiblity)
+resulting in:
+0=auto, 1=MF, 3=inf., 4=macro, 5=supermacro
+CHDK set_mf is correctly reported as MF, because set_mf overrides PROPCASE_FOCUS_MODE if needed
+*/
 short shooting_get_real_focus_mode()
 {
     short f = shooting_get_focus_mode();
@@ -1021,45 +1029,36 @@ int shooting_get_hyperfocal_distance()
 
 short shooting_can_focus()
 {
-#if !CAM_CAN_SD_OVER_NOT_IN_MF && CAM_CAN_SD_OVERRIDE
-#if CAM_CAN_SD_OVER_IN_AF_LOCK_ONLY
-    if (shooting_get_prop(PROPCASE_AF_LOCK))
-        return 1;
-    else if (!camera_info.state.mode_video)
-        return 0;
-#elif CAM_CAN_SD_OVER_IN_AF_LOCK
-    if (shooting_get_prop(PROPCASE_AF_LOCK))
-        return 1;
-#elif CAM_HAS_VIDEO_BUTTON
-	return shooting_get_common_focus_mode();
+    if(camera_info.state.mode_play) return 0 ;                 // don't focus in playback mode
+
+    if( camera_info.state.mode_video == 1) return 1;           // FIXME : default to MF enabled in video mode for now
+
+#ifdef CAM_SD_OVER_IN_AFL
+    if (shooting_get_prop(PROPCASE_AF_LOCK)==1 ) return 1;     // allow focus if AFL enabled and camera can focus that way?
 #endif
-    return (shooting_get_common_focus_mode() || camera_info.state.mode_video);
-#elif !CAM_CAN_SD_OVERRIDE
-    return camera_info.state.mode_video;
-#elif defined (CAMERA_ixus800_sd700)
-    // TODO whats the reason for this ?!?
-    return (shooting_get_zoom()<8) && (camera_info.state.mode_shooting!=MODE_AUTO) && (camera_info.state.mode_shooting!=MODE_SCN_UNDERWATER);
-#else
+#ifdef CAM_SD_OVER_IN_MF
+    if (shooting_get_prop(PROPCASE_FOCUS_MODE)==1 ) return 1;  // allow focus if MF enabled and camera can focus that way?
+#endif
+
+#ifdef CAM_SD_OVER_IN_AF 
 #ifdef PROPCASE_CONTINUOUS_AF
-    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF))
-        return 0;
+    if (shooting_get_prop(PROPCASE_CONTINUOUS_AF)) return 0;   // don't focus in continuous AF mode,
 #endif
 #ifdef PROPCASE_SERVO_AF
-    if (shooting_get_prop(PROPCASE_SERVO_AF))
-        return 0;
+    if (shooting_get_prop(PROPCASE_SERVO_AF)) return 0;        // don't focus in servo AF mode
 #endif
-    return 1;
+    if (    (shooting_get_prop(PROPCASE_AF_LOCK)==0)           // allow focus when in AF mode (i.e AFL or MF not enabled)?
+         && (shooting_get_prop(PROPCASE_FOCUS_MODE)==0 )) return 1;
 #endif
+    return 0;
 }
 
 short shooting_get_common_focus_mode()
 {
-#if !CAM_HAS_MANUAL_FOCUS && CAM_CAN_SD_OVERRIDE
-    return conf.subj_dist_override_koef;
-#elif !CAM_CAN_SD_OVERRIDE
-    return 0;
+#if !CAM_HAS_MANUAL_FOCUS
+    return conf.subj_dist_override_koef;         // SD override state 0=OFF, 1=ON, 2=Infinity if camera has no native MF mode
 #else
-    return shooting_get_focus_mode();
+    return shooting_get_focus_mode();            // 0=Auto, 1=manual
 #endif
 }
 
@@ -1640,7 +1639,7 @@ uses switch_mode_usb if a usb connection is present
 */
 void shooting_set_playrec_mode(int mode)
 {
-    if (get_usb_bit_physw()) 
+    if (conf.remote_enable == 0 && get_usb_bit()) 
     {
         switch_mode_usb(mode);
         return;

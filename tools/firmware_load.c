@@ -919,6 +919,11 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                         fw->cam_idx = adr2idx(fw,(fw->base==0xFF000000)?0xFFF40170:0xFFFE0170);
                 }
                 break;
+            case 54:
+                // based on 2 digic 4+ cams
+                fw->cam_idx = adr2idx(fw,(fw->base==0xFF020000)?0xFFF40170:0xFFFF0170);
+                fw->pid_adr = (fw->base==0xFF020000)?0xFFF40040:0xFFFF0040;
+                break;
         }
     }
     else
@@ -1078,6 +1083,7 @@ void load_firmware(firmware *fw, const char *filename, const char *base_addr, co
                     case 0x76894368:    fw->ksys = "d4b  "; break;
                     case 0x50838EF7:    fw->ksys = "d4c  "; break;
                     case 0xCCE4D2E6:    fw->ksys = "d4d  "; break;
+                    case 0x66E0C6D2:    fw->ksys = "d4e  "; break;
                 }
             }
 
