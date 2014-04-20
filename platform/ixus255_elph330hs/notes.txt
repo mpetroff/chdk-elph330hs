@@ -6,7 +6,7 @@ This may be changed to the Video button in the options.
 
 This camera does not have an adjustable aperture. It does have an ND filter.
 
-This is an alpha port. Use at your own risk!
+This is an beta port. Use at your own risk!
 
 TESTED
 ******
